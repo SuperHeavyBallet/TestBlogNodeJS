@@ -68,14 +68,43 @@ const fs = require('fs');
 
 
 // deleting files
+// File System > Unlink is the function for deleting a file
+// Unlink takes two Arguments, the relative path to the file in question and an Async callback function which accepts an error arg
+// Good practice to check if the file to be deleted is actually there via a sync fs.exists function to check
+// fs.exists takes an argument with the relative path to the file being checked
 
-if (fs.existsSync('./docs/deleteme.txt'))
+// if (fs.existsSync('./docs/deleteme.txt'))
+// {
+//     fs.unlink('./docs/deleteme.txt', (err) => {
+//         if (err)
+//         {
+//             console.log(err);
+//         }
+//         console.log("File deleted!");
+//     })
+// }
+
+// fs.writeFile('./streams.js', 'Hello, world!', (err) =>
+// {
+//     if(err)
+//     {
+//         console.log(err);
+//     }
+//     console.log("File Created");
+// });
+
+function writeNewFile(fileLocation, fileContents)
 {
-    fs.unlink('./docs/deleteme.txt', (err) => {
+    fs.writeFile(fileLocation, fileContents, (err) => {
         if (err)
         {
             console.log(err);
         }
-        console.log("File deleted!");
+        else
+        {
+            console.log("File Created")
+        }
     })
-}
+};
+
+writeNewFile('./docs/blog3.txt', 'Blablablbla');
