@@ -26,4 +26,5 @@ const writeStream = fs.createWriteStream('./docs/blog4.txt');
 
 // piping
 
+// .pipe is a shortcut for the above process, to read a stream and then write the contents of that stream into a new file
 readStream.pipe(writeStream);
