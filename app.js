@@ -1,7 +1,27 @@
 
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
+
+const blogRoutes = require('./routes/blogRoutes.js');
+
+// Connect to mongoDB
+const dbUsername = process.env.DB_USERNAME;
+const dbPassword = process.env.DB_PASSWORD;
+const dbName = process.env.DB_NAME;
+
+const dbURI = `mongodb+srv://${dbUsername}:${dbPassword}@cluster0.62chw.mongodb.net/${dbName}?retryWrites=true&w=majority&appName=Cluster0`;
+
+
+mongoose.connect(dbURI, {
+  }).then((result) => {
+    console.log('Connected to MongoDB');
+    app.listen(3000);
+  }).catch((err) => {
+    console.error('Failed to connect to MongoDB', err);
+  });
 // express app
 
 const app = express();
@@ -13,7 +33,7 @@ app.set('view engine', 'ejs');
 //app.set('views', 'views');
 
 // listen for requests
-app.listen(3000);
+
 
 
 // // Response, send files to specific address GET requests
@@ -59,22 +79,55 @@ app.listen(3000);
 
 // middleware & static files
 app.use(express.static('public'));
-
+app.use(express.urlencoded({ extended: true }));
 // Middleware made using Morgan, a 3rd party plugin
 app.use(morgan('dev'));
 
 
+// // mongoose and mongo sandbox routes
+// app.get('/add-blog', (req, res) => {
+//     const blog = new Blog({
+//         title: 'New Blog 2',
+//         snippet: 'About my new blog 2',
+//         body: 'More about my new blog 2'
+//     });
+
+//     blog.save()
+//     .then((result) => {
+//         res.send((result));
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     });
+
+// });
+
+// app.get('/all-blogs', (req, res) => {
+//     Blog.find()
+//     .then((result) => {
+//         res.send(result);
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     })
+// });
+
+// app.get('/single-blog', (req, res) => {
+//     Blog.findById("66be9c878f8285372a196cdc")
+//     .then((result) =>
+//     {
+//         res.send(result);
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     })
+// })
+
 /// Using Express / EJS
 
 app.get('/', (req, res) => {
+    res.redirect('/blogs');
 
-    const blogs = [
-        {title: 'Yoshi finds eggs', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-        {title: 'Mario finds stars', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-        {title: 'How to defeat Bowser', snippet: 'Lorem ipsum dolor sit amet consectetur'},
-    ];
-
-    res.render('index', { title: 'Home',  blogs: blogs });
 });
 
 
@@ -83,10 +136,10 @@ app.get('/about', (req, res) =>
     res.render('about', { title: 'About' });
 });
 
-app.get('/blogs/create', (req, res) => {
-    res.render('create', { title: 'Create New Blog Post' });
-});
+// blog routes
+app.use('/blogs',blogRoutes);
 
+// Else 404
 app.use((req, res) => {
     res.render('404', { title: '404, Not Found' });
 })
