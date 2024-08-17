@@ -2,12 +2,14 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-require('dotenv').config();
+const dotenv = require('dotenv');
+dotenv.config();
 
 
 const blogRoutes = require('./routes/blogRoutes.js');
 
 // Connect to mongoDB
+
 const dbUsername = process.env.DB_USERNAME;
 const dbPassword = process.env.DB_PASSWORD;
 const dbName = process.env.DB_NAME;
