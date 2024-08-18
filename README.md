@@ -148,3 +148,34 @@ The method takes three arguments.
 3. Callback function: This is an optional function that will be executed once the server starts listening. In this case the callback function logs the message `Listening for Requests on Port 3000` to the console, indicating that the server has succesfully started and is ready to handle requests.
 
 **_END server.js_**
+
+**Streams.js**
+
+const fs = require('fs');
+
+Here, we are loading the `fs`(`file system`) module from Node.js, which allows access to the file interaction methods.
+
+const readStream = fs.createReadStream('./docs/blog3.txt', { encoding: 'utf8' });
+
+Here, we initialize a variable `readStream` which is assigned the `fs` `createReadStream` method, which acts to retrieve and read a data source. This method allows two arguments, the first being a string which represents the location of the file to be read from and the second as the format to read the file in. In this case the file is `.txt` and the encoding format used is `utf8`.
+
+const writeStream = fs.createWriteStream('./docs/blog4.txt');
+
+Here, we initialize a variable `writeStream` which is assigned the `fs` `createWriteStream` method, which acts to write and/or create a file in a location. An argument is taken for the location for the file to be written to, including the name, which will create a new file if one is not already present.
+
+readStream.on('data', (chunk) => {
+    console.log('-------New Chunk------')
+    console.log(chunk);
+    writeStream.write('\nNEW CHUNK\n');
+    writeStream.write(chunk);
+});
+
+Here, using the `readStream` variable created earlier which read data from the path given, we assign the `on` method, which activate the reading function to load the data from that path, and it will do so in `chunks` of data, rather than the entire body at once.
+
+Then, each chunk of data is logged to the console to display where the read function is during the reading of the whole file.
+
+Then, using the `writeStream` variable, which has a location ready to be written to, we use the `.write` method to write `New Chunk` to indicate breaks in the log at each `chunk` start and end, and then log each `chunk` as it is read and written.
+
+readStream.pipe(writeStream);
+
+This acts as a shorthand version for the same process of reading and writing, but condensed to a single line of code. The `readStream` variable which acts to read the content is then given the `.pipe` method to proceed to write, accepting the variable here of `writeStream` which provides the location to read and write the content to.
